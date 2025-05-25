@@ -8,16 +8,14 @@ export class AuthGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
+    console.log('LIFECYLCE 2: INIT GUARD');
+
     const request = context.switchToHttp().getRequest();
+
     const apiKey = request.headers['x-api-key'];
 
-    console.log('INIT GUARD');
-    if (apiKey !== 'SECRET') {
-      console.log('GUARD FAILED AUTH');
-    } else {
-      console.log('GUARD PASSED AUTH');
-      return true;
-    }
+    if (apiKey === 'SECRET') return true;
+
     return false;
   }
 }

@@ -7,17 +7,21 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { Observable } from 'rxjs';
 
 @Injectable()
 export class BrowserInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const request = context.switchToHttp().getRequest();
-    const userAgent = request.header('user-agent');
-    const browserClient = userAgent ? userAgent : 'Unknown';
-    const connection = request.connection.remoteAddress;
-    console.log(`IP: ${connection}`);
-    console.log(`BROWSER: ${browserClient}`);
+    console.log('LIFECYLCE 3: INTERCEPTOR BEFORE HANDLER');
+    const request: Request = context.switchToHttp().getRequest(); // Get the HTTP request object
+
+    const userAgent = request.headers['user-agent']; // Extract user agent information from headers
+
+    const formattedUserAgent = userAgent?.replace(/[^a-zA-Z\s]/g, ''); // Remove non-alphanumeric characters except spaces
+
+    console.log(`Browser Interceptor - User Agent: ${formattedUserAgent}`);
+
     return next.handle();
   }
 }
