@@ -22,6 +22,8 @@ export class BrowserInterceptor implements NestInterceptor {
 
     console.log(`Browser Interceptor - User Agent: ${formattedUserAgent}`);
 
+    request.headers.browser = formattedUserAgent; // Add browser information as a header for further processing
+
     return next.handle();
   }
 }
