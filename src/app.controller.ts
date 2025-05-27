@@ -5,6 +5,7 @@ import { Request } from 'express';
 
 @Controller()
 export class AppController {
+  // dep injection
   constructor(private readonly appService: AppService) {}
 
   @Get()

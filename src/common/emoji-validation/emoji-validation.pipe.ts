@@ -1,9 +1,11 @@
 import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
+import { LoggerService } from 'src/logger.service';
 
 @Injectable()
 export class EmojiValidationPipe implements PipeTransform {
+  constructor(private readonly logger: LoggerService) {}
   transform(value: any) {
-    console.log('LIFECYCLE 4: PIPE');
+    this.logger.log('LIFECYCLE 4: PIPE');
 
     if (!value) return;
 

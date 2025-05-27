@@ -2,14 +2,15 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
+import { LoggerService } from 'src/logger.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
+  constructor(private readonly logger: LoggerService) {}
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    // throw new Error();
-    console.log('LIFECYLCE 2: INIT GUARD');
+    this.logger.log('LIFECYLCE 2: INIT GUARD');
 
     const request = context.switchToHttp().getRequest();
 
