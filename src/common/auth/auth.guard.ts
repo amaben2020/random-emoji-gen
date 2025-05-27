@@ -8,6 +8,7 @@ export class AuthGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
+    // throw new Error();
     console.log('LIFECYLCE 2: INIT GUARD');
 
     const request = context.switchToHttp().getRequest();
