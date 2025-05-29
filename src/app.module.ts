@@ -6,9 +6,10 @@ import { LoggerService } from './logger.service';
 import { AuthGuard } from './common/auth/auth.guard';
 import { TransformResponseInterceptor } from './common/transform-response/transform-response.interceptor';
 import { AllExceptionsFilter } from './common/all-exceptions/all-exceptions.filter';
+import { CatsModule } from './core/database/cats.module';
 
 @Module({
-  imports: [],
+  imports: [CatsModule], // CatsModule
   controllers: [AppController],
   providers: [
     AppService,
