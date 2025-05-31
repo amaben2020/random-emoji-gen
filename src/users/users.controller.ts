@@ -17,15 +17,19 @@ import { UsersService } from './providers/users.service';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-  @Get(':id')
-  getUsers(
+
+  @Get()
+  findAll(
     @Headers() headers: Record<string, unknown>,
-    @Param('id', ParseIntPipe) id: GetUserParamDto,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('offset', new DefaultValuePipe(1), ParseIntPipe) offset: number,
-    // @Query('available', ParseBoolPipe) available: boolean,
   ) {
-    return this.usersService.findAll(id, limit, offset);
+    console.log(headers);
+    return this.usersService.findAll(limit, offset);
+  }
+  @Get(':id')
+  getUser(@Param('id') id: number) {
+    return this.usersService.findOneById(id);
   }
 
   @Post()
