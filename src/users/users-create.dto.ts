@@ -6,6 +6,7 @@ import {
   MinLength,
   IsEmail,
   Matches,
+  IsNumber,
 } from 'class-validator';
 
 export class UsersCreateDto {
@@ -33,4 +34,10 @@ export class UsersCreateDto {
     message: 'password too weak',
   })
   password: string;
+}
+
+export class GetUserParamDto {
+  @IsNumber()
+  @IsNotEmpty()
+  id: number;
 }

@@ -5,24 +5,27 @@ import {
   Get,
   Headers,
   Param,
-  ParseBoolPipe,
+  // ParseBoolPipe,
   ParseIntPipe,
   Post,
   Query,
 } from '@nestjs/common';
-import { UsersCreateDto } from './users-create.dto';
+import { GetUserParamDto, UsersCreateDto } from './users-create.dto';
+
+import { UsersService } from './providers/users.service';
 
 @Controller('users')
 export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
   @Get(':id')
   getUsers(
     @Headers() headers: Record<string, unknown>,
-    @Param('id', ParseIntPipe) id: string,
+    @Param('id', ParseIntPipe) id: GetUserParamDto,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('offset', new DefaultValuePipe(1), ParseIntPipe) offset: number,
-    @Query('available', ParseBoolPipe) available: boolean,
+    // @Query('available', ParseBoolPipe) available: boolean,
   ) {
-    return `id: ${id}, limit: ${limit}, offset: ${offset} available: ${available}`;
+    return this.usersService.findAll(id, limit, offset);
   }
 
   @Post()
