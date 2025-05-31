@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { BrowserInterceptor } from './common/browser/browser.interceptor';
 import { ValidationPipe } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -15,6 +17,19 @@ async function bootstrap() {
       transform: true, // Automatically transforms payloads to DTO instances
     }),
   );
+
+  const config = new DocumentBuilder()
+    .setTitle('Nest js masterclass')
+    .setDescription('Base URL http://localhost:9000')
+    .setTermsOfService('http://localhost:9000/terms-of-service')
+    .setLicense('MIT License', 'https://opensource.org/licenses/MIT')
+    .addServer('http://localhost:9000', 'Localhost')
+    .setVersion('1.0')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+
+  SwaggerModule.setup('/api', app, document);
 
   await app.listen(process.env.PORT ?? 9000);
 }

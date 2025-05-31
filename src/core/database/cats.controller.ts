@@ -67,8 +67,10 @@ import {
 import { Response } from 'express';
 import { CreateCatDto, UpdateCatDto, ListAllEntities } from './create-cat-dto';
 import { CatsService } from './cats.service';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('cats')
+@ApiTags('Cats')
 export class CatsController {
   // constructor(private readonly catService: CatsService) {} Standard
   constructor(

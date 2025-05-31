@@ -13,7 +13,7 @@ import { TransformResponseInterceptor } from './common/transform-response/transf
 import { AllExceptionsFilter } from './common/all-exceptions/all-exceptions.filter';
 import { CatsModule } from './core/database/cats.module';
 import { UsersModule } from './users/users.module';
-import { PostsModule } from './users/posts/posts.module';
+import { PostsModule } from './posts/posts.module';
 
 @Module({
   imports: [CatsModule, UsersModule, PostsModule], // CatsModule
@@ -29,10 +29,10 @@ import { PostsModule } from './users/posts/posts.module';
       provide: 'APP_INTERCEPTOR',
       useClass: TransformResponseInterceptor,
     },
-    {
-      provide: 'APP_FILTER',
-      useClass: AllExceptionsFilter,
-    },
+    // {
+    //   provide: 'APP_FILTER',
+    //   useClass: AllExceptionsFilter,
+    // },
   ],
 })
 export class AppModule implements NestModule {
