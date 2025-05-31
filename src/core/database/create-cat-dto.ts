@@ -1,5 +1,5 @@
 // A DTO is an object that specifies how data should be sent over the network.
-import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsString, IsNumber } from 'class-validator';
 export class CreateCatDto {
   @IsString()
   name: string;
