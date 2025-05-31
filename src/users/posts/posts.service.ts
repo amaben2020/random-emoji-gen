@@ -3,6 +3,6 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class PostsService {
   findAll() {
-    return [];
+    return ['These are your posts!'];
   }
 }

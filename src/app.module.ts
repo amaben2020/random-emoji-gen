@@ -13,9 +13,10 @@ import { TransformResponseInterceptor } from './common/transform-response/transf
 import { AllExceptionsFilter } from './common/all-exceptions/all-exceptions.filter';
 import { CatsModule } from './core/database/cats.module';
 import { UsersModule } from './users/users.module';
+import { PostsModule } from './users/posts/posts.module';
 
 @Module({
-  imports: [CatsModule, UsersModule], // CatsModule
+  imports: [CatsModule, UsersModule, PostsModule], // CatsModule
   controllers: [AppController],
   providers: [
     AppService,
