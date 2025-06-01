@@ -19,6 +19,8 @@ import { User } from './users/user.entity';
 import { Post } from './posts/post.entity';
 import { TagsModule } from './tags/tags.module';
 import { Tag } from './tags/tag.entity';
+import { MetaOptionsModule } from './meta-options/meta-options.module';
+import { MetaOption } from './meta-options/meta-options.entity';
 
 @Module({
   imports: [
@@ -26,6 +28,7 @@ import { Tag } from './tags/tag.entity';
     UsersModule,
     PostsModule,
     TagsModule,
+    MetaOptionsModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -33,9 +36,11 @@ import { Tag } from './tags/tag.entity';
       username: 'postgres',
       password: '1234',
       database: 'nestjs-blog',
-      entities: [User, Post, Tag],
+      // add every entity here
+      entities: [User, Post, Tag, MetaOption],
       synchronize: true, // do not use in production!
     }),
+    MetaOptionsModule,
   ],
   controllers: [AppController],
   providers: [

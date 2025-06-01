@@ -1,7 +1,7 @@
-import { Type } from 'class-transformer';
+// import { Type } from 'class-transformer';
 import {
   IsArray,
-  IsDate,
+  // IsDate,
   IsDateString,
   IsEnum,
   IsNotEmpty,
@@ -10,8 +10,10 @@ import {
   IsUrl,
   Matches,
   MinLength,
-  ValidateNested,
+  // ValidateNested,
 } from 'class-validator';
+import { MetaOption } from 'src/meta-options/meta-options.entity';
+import { JoinColumn, OneToOne } from 'typeorm';
 
 export enum Status {
   DRAFT = 'draft',
@@ -27,14 +29,14 @@ export enum PostType {
   SERIES = 'series',
 }
 
-export class MetaOptionDto {
-  @IsString()
-  @IsNotEmpty()
-  key: string;
+// export class MetaOptionDto {
+//   @IsString()
+//   @IsNotEmpty()
+//   key: string;
 
-  @IsNotEmpty()
-  value: any;
-}
+//   @IsNotEmpty()
+//   value: any;
+// }
 
 export class PostCreateDto {
   @IsString()
@@ -80,9 +82,13 @@ export class PostCreateDto {
   tags: string[];
 
   //Nested object [{key:string,value:any},...]
-  @IsOptional()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => MetaOptionDto)
-  metaOptions: MetaOptionDto[];
+  // @IsOptional()
+  // @IsArray()
+  // @ValidateNested({ each: true })
+  // @Type(() => MetaOptionDto)
+  // metaOptions: MetaOptionDto[];
+
+  @OneToOne(() => MetaOption)
+  @JoinColumn()
+  metaOptions: MetaOption;
 }

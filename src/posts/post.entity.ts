@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { MetaOptionDto, PostType, Status } from './post-create.dto';
+import { PostType, Status } from './post-create.dto';
 @Entity()
 export class Post {
   @PrimaryGeneratedColumn()
@@ -44,6 +44,6 @@ export class Post {
   @Column({ type: 'simple-array', nullable: true })
   tags?: string[];
 
-  @Column({ type: 'json', nullable: true })
-  metaOptions?: MetaOptionDto[];
+  // @Column({ type: 'json', nullable: true })
+  // metaOptions?: MetaOptionDto[];
 }
