@@ -16,6 +16,7 @@ import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/user.entity';
+import { Post } from './posts/post.entity';
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ import { User } from './users/user.entity';
       username: 'postgres',
       password: '1234',
       database: 'nestjs-blog',
-      entities: [User],
+      entities: [User, Post],
       synchronize: true, // do not use in production!
     }),
   ],

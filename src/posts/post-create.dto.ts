@@ -12,23 +12,22 @@ import {
   MinLength,
   ValidateNested,
 } from 'class-validator';
-import { Validate } from 'sequelize-typescript';
 
-enum Status {
+export enum Status {
   DRAFT = 'draft',
   SCHEDULED = 'scheduled',
   REVIEW = 'review',
   PUBLISHED = 'published',
 }
 
-enum PostType {
+export enum PostType {
   POST = 'post',
   PAGE = 'page',
   STORY = 'story',
   SERIES = 'series',
 }
 
-class MetaOptionDto {
+export class MetaOptionDto {
   @IsString()
   @IsNotEmpty()
   key: string;
@@ -69,10 +68,10 @@ export class PostCreateDto {
   @IsString()
   @IsOptional()
   @IsUrl({ require_tld: false })
-  featuredImageUrl: string;
+  featuredImageUrl?: string;
 
   @IsDateString()
-  publishOn: Date;
+  publishOn?: Date;
 
   @IsArray()
   @IsOptional()
