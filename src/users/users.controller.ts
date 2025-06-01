@@ -35,7 +35,8 @@ export class UsersController {
   }
 
   @Post()
-  createUser(@Body() request: UsersCreateDto) {
-    return `${request.email} ${request.firstName} ${request.lastName} ${request.password} has been created!`;
+  async createUser(@Body() body: UsersCreateDto) {
+    return await this.usersService.createUser(body);
+    // return `${request.email} ${request.firstName} ${request.lastName} ${request.password} has been created!`;
   }
 }

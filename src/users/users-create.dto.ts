@@ -8,8 +8,11 @@ import {
   Matches,
   IsNumber,
 } from 'class-validator';
+import { User } from './user.entity';
 
-export class UsersCreateDto {
+export class UsersCreateDto
+  implements Pick<User, 'email' | 'firstName' | 'lastName'>
+{
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
