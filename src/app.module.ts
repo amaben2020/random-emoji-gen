@@ -25,6 +25,7 @@ import { Tag } from './tags/tag.entity';
     CatsModule,
     UsersModule,
     PostsModule,
+    TagsModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -35,7 +36,6 @@ import { Tag } from './tags/tag.entity';
       entities: [User, Post, Tag],
       synchronize: true, // do not use in production!
     }),
-    TagsModule,
   ],
   controllers: [AppController],
   providers: [
