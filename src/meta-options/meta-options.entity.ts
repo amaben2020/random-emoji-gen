@@ -1,17 +1,19 @@
-import { IsDate, IsJSON } from 'class-validator';
-import { Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class MetaOption {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @IsJSON()
+  @Column({
+    type: 'json',
+    nullable: true,
+  })
   metaValue: string;
 
-  @IsDate()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createDate: Date;
 
-  @IsDate()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updateDate: Date;
 }

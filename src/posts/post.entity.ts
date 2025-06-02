@@ -1,5 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { PostType, Status } from './post-create.dto';
+import { MetaOption } from 'src/meta-options/meta-options.entity';
+
 @Entity()
 export class Post {
   @PrimaryGeneratedColumn()
@@ -13,11 +21,17 @@ export class Post {
     enum: PostType,
     enumName: 'post_type_enum',
     default: PostType.PAGE,
-    nullable: false,
+    nullable: true,
   })
   postType: PostType;
 
-  @Column({ type: 'varchar', unique: true, length: 256, nullable: false })
+  @Column({
+    type: 'varchar',
+    unique: true,
+    length: 256,
+    nullable: false,
+    default: '',
+  })
   slug: string;
 
   @Column({
@@ -46,4 +60,8 @@ export class Post {
 
   // @Column({ type: 'json', nullable: true })
   // metaOptions?: MetaOptionDto[];
+
+  @OneToOne(() => MetaOption, { nullable: true })
+  @JoinColumn()
+  metaOptions?: MetaOption | null;
 }

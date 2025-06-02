@@ -8,6 +8,10 @@ import { PostCreateDto } from './post-create.dto';
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
+  // @Get()
+  // findAll() {
+  //   return this.postsService.findAll();
+  // }
   @Get()
   findAll() {
     return this.postsService.findAll();

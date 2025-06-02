@@ -4,7 +4,10 @@ import {
   // IsDate,
   IsDateString,
   IsEnum,
+  IsJSON,
+  isJSON,
   IsNotEmpty,
+  IsObject,
   IsOptional,
   IsString,
   IsUrl,
@@ -12,8 +15,8 @@ import {
   MinLength,
   // ValidateNested,
 } from 'class-validator';
+
 import { MetaOption } from 'src/meta-options/meta-options.entity';
-import { JoinColumn, OneToOne } from 'typeorm';
 
 export enum Status {
   DRAFT = 'draft',
@@ -88,7 +91,6 @@ export class PostCreateDto {
   // @Type(() => MetaOptionDto)
   // metaOptions: MetaOptionDto[];
 
-  @OneToOne(() => MetaOption)
-  @JoinColumn()
-  metaOptions: MetaOption;
+  @IsOptional()
+  metaOptions?: MetaOption;
 }

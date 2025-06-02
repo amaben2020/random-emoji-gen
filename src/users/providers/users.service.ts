@@ -20,8 +20,8 @@ export class UsersService {
   public findAll(limit: number, offset: number) {
     try {
       // return `This action returns all users  ${limit} ${offset}`;
-      const posts = this.postService.findAll();
-      console.log('Posts', posts);
+      // const posts = this.postService.findAll();
+      // console.log('Posts', posts);
       return this.userRepository.find();
     } catch (error) {
       console.log(error || 'Something went wrong');
