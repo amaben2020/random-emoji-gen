@@ -1,13 +1,12 @@
 // import { Type } from 'class-transformer';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsArray,
   // IsDate,
   IsDateString,
   IsEnum,
   IsJSON,
-  isJSON,
   IsNotEmpty,
-  IsObject,
   IsOptional,
   IsString,
   IsUrl,
@@ -91,6 +90,7 @@ export class PostCreateDto {
   // @Type(() => MetaOptionDto)
   // metaOptions: MetaOptionDto[];
 
+  @ApiPropertyOptional({ type: JSON })
   @IsOptional()
   metaOptions?: MetaOption;
 }

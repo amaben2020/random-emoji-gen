@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsOptional, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class MetaOptionsDto {
   @ApiProperty({
@@ -7,10 +7,4 @@ export class MetaOptionsDto {
   })
   @IsString()
   metaValue: string;
-
-  @IsDate()
-  createDate?: Date;
-
-  @IsDate()
-  updateDate?: Date;
 }

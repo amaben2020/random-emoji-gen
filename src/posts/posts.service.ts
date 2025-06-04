@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PostCreateDto } from './post-create.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from './post.entity';
 import { Repository } from 'typeorm';
-import { MetaOption } from 'src/meta-options/meta-options.entity';
+// import { MetaOption } from 'src/meta-options/meta-options.entity';
 
 // @Injectable()
 // export class PostsService {
@@ -36,8 +36,8 @@ import { MetaOption } from 'src/meta-options/meta-options.entity';
 export class PostsService {
   constructor(
     @InjectRepository(Post) private postRepository: Repository<Post>,
-    @InjectRepository(MetaOption)
-    private metaOptionRepository: Repository<MetaOption>,
+    // @InjectRepository(MetaOption)
+    // private metaOptionRepository: Repository<MetaOption>,
   ) {}
 
   async findAll(): Promise<Post[]> {
@@ -49,38 +49,18 @@ export class PostsService {
   }
 
   async createPost(postData: PostCreateDto) {
-    // Validate postData first
-    if (!postData.title) {
-      throw new Error('Title is required');
-    }
-
-    // Create and save meta option if provided
-    let savedMetaOption: MetaOption | null = null;
-
-    console.log(
-      'postData.metaOptions?.metaValue',
-      postData.metaOptions?.metaValue,
-    );
-
-    if (postData.metaOptions !== null) {
-      savedMetaOption = await this.metaOptionRepository.save({
-        ...postData.metaOptions,
-        createDate: new Date(),
-        updateDate: new Date(),
+    try {
+      // creates a new instance
+      const post = this.postRepository.create({
+        ...postData,
+        metaOptions: postData.metaOptions || null,
       });
+
+      return await this.postRepository.save(post);
+    } catch (error) {
+      console.error('Error creating post:', error);
+
+      throw new BadRequestException('Post already exists');
     }
-
-    console.log('SAVED META OPTION ===>', savedMetaOption);
-
-    // Create post with optional meta option reference
-    const post = this.postRepository.create({
-      ...postData,
-      metaOptions:
-        savedMetaOption?.id && savedMetaOption.createDate
-          ? savedMetaOption
-          : null,
-    });
-    console.log('POST ===>', post);
-    return this.postRepository.save(post);
   }
 }
