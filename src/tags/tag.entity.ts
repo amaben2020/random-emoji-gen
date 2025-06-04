@@ -1,4 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Tag {
@@ -14,13 +20,13 @@ export class Tag {
   @Column({ type: 'jsonb', default: [] })
   schema?: string;
 
-  @Column({
+  @CreateDateColumn({
     type: 'timestamp with time zone',
     default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt!: Date;
 
-  @Column({
+  @UpdateDateColumn({
     type: 'timestamp with time zone',
     default: () => 'CURRENT_TIMESTAMP',
   })
