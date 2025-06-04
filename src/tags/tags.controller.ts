@@ -8,8 +8,8 @@ export class TagsController {
   constructor(private readonly tagsService: TagsService) {}
 
   @Get()
-  getTags() {
-    return 'Tag';
+  async getTags() {
+    return await this.tagsService.getTags();
   }
 
   @Post()

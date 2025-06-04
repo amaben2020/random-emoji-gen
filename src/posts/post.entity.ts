@@ -1,6 +1,8 @@
 import {
   Column,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -8,6 +10,7 @@ import {
 import { PostType, Status } from './post-create.dto';
 import { MetaOption } from 'src/meta-options/meta-options.entity';
 import { User } from 'src/users/user.entity';
+import { Tag } from 'src/tags/tag.entity';
 
 @Entity()
 export class Post {
@@ -56,8 +59,8 @@ export class Post {
   @Column({ type: 'timestamp', nullable: true })
   publishOn?: Date;
 
-  @Column({ type: 'simple-array', nullable: true })
-  tags?: string[];
+  // @Column({ type: 'simple-array', nullable: true })
+  // tags?: string[];
 
   @OneToOne(() => MetaOption, (metaOption) => metaOption.post, {
     cascade: true,
@@ -68,4 +71,8 @@ export class Post {
 
   @ManyToOne(() => User, (user) => user.posts, { onDelete: 'CASCADE' })
   author!: User;
+
+  @ManyToMany(() => Tag, (tag) => tag.posts, { onDelete: 'CASCADE' })
+  @JoinTable()
+  tags?: Tag[];
 }

@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Tag } from './tag.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTagDto } from './tags-create.dto';
 
@@ -11,8 +11,26 @@ export class TagsService {
     private readonly tagRepository: Repository<Tag>,
   ) {}
 
-  async getTags(): Promise<Tag[]> {
-    return await this.tagRepository.find();
+  async getTags(): Promise<Tag[] | undefined> {
+    try {
+      return await this.tagRepository.find();
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException(error);
+    }
+  }
+
+  public async findByTagIds(tagIds: string[]) {
+    try {
+      if (!tagIds.length) return [];
+      return await this.tagRepository.find({
+        where: {
+          id: In(tagIds),
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async create(createTagDto: CreateTagDto) {

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 // no need to put date
 
@@ -18,6 +18,7 @@ export class CreateTagDto {
     example: 'tag-slug',
   })
   @IsString()
+  @IsOptional()
   slug: string;
 
   @ApiProperty({
