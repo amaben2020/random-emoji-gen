@@ -1,15 +1,17 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsArray,
   IsDateString,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   IsUrl,
   Matches,
   MinLength,
 } from 'class-validator';
+// always remember
 
 import { MetaOption } from 'src/meta-options/meta-options.entity';
 
@@ -80,4 +82,11 @@ export class PostCreateDto {
   @ApiPropertyOptional({ type: JSON })
   @IsOptional()
   metaOptions?: MetaOption;
+
+  @ApiProperty({
+    type: Number,
+    description: 'The author of the post',
+  })
+  @IsNumber()
+  authorId: number;
 }

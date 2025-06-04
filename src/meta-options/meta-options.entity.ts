@@ -1,5 +1,13 @@
 import { Post } from 'src/posts/post.entity';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class MetaOption {
@@ -12,12 +20,14 @@ export class MetaOption {
   })
   metaValue: string;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn()
   createDate: Date;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn()
   updateDate: Date;
 
-  @OneToOne(() => Post, (post) => post.metaOptions)
+  @OneToOne(() => Post, (post) => post.metaOptions, { onDelete: 'CASCADE' })
+  // Join column simply enables a table have the FK, this ensures that when the other side is deleted, it will also delete this one.
+  @JoinColumn()
   post: Post;
 }

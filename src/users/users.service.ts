@@ -1,11 +1,17 @@
-import { Inject, Injectable, RequestTimeoutException } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+  RequestTimeoutException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../user.entity';
+import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { PostsService } from 'src/posts/posts.service';
-import { UsersCreateDto } from '../users-create.dto';
+import { UsersCreateDto } from './users-create.dto';
 import { ConfigService, ConfigType } from '@nestjs/config';
-import profileConfig from '../config/profile.config';
+import profileConfig from './config/profile.config';
 
 @Injectable()
 export class UsersService {
@@ -13,7 +19,8 @@ export class UsersService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
 
-    private postService: PostsService,
+    // @Inject(forwardRef(() => PostsService))
+    // private postService: PostsService,
 
     private readonly configService: ConfigService,
 
@@ -40,7 +47,11 @@ export class UsersService {
       let users = undefined;
       // wrap in trycatch any db requests
       try {
-        users = await this.userRepository.find();
+        users = await this.userRepository.find({
+          relations: {
+            posts: true,
+          },
+        });
       } catch (error) {
         console.log(error);
         throw new RequestTimeoutException(
@@ -59,11 +70,14 @@ export class UsersService {
     }
   }
 
-  public findOneById(id: number) {
+  public async findOneById(id: number): Promise<User | null> {
     try {
-      return `This action returns a #${id} user`;
+      const user = await this.userRepository.findOneBy({ id });
+
+      return user;
     } catch (error) {
-      console.log(error || 'Something went wrong');
+      console.error(error);
+      throw new BadRequestException(`User with ID ${id} not found`);
     }
   }
 }

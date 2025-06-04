@@ -1,12 +1,13 @@
 import {
   Column,
   Entity,
-  JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { PostType, Status } from './post-create.dto';
 import { MetaOption } from 'src/meta-options/meta-options.entity';
+import { User } from 'src/users/user.entity';
 
 @Entity()
 export class Post {
@@ -61,7 +62,10 @@ export class Post {
   @OneToOne(() => MetaOption, (metaOption) => metaOption.post, {
     cascade: true,
     eager: true,
+    onDelete: 'CASCADE',
   })
-  @JoinColumn()
   metaOptions?: MetaOption;
+
+  @ManyToOne(() => User, (user) => user.posts, { onDelete: 'CASCADE' })
+  author!: User;
 }
