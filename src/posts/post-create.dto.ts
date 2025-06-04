@@ -30,15 +30,30 @@ export enum PostType {
 }
 
 export class PostCreateDto {
+  @ApiProperty({
+    type: String,
+    description: 'Title',
+    example: 'My Post Title',
+  })
   @IsString()
   @IsNotEmpty()
   @MinLength(5)
   title: string;
 
+  @ApiProperty({
+    type: String,
+    description: 'Post Type',
+    example: 'post',
+  })
   @IsNotEmpty()
   @IsEnum(PostType)
   postType: PostType;
 
+  @ApiPropertyOptional({
+    type: String,
+    description: 'Slug',
+    example: 'my-post-slug',
+  })
   @IsString()
   @IsNotEmpty()
   @Matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
@@ -46,10 +61,16 @@ export class PostCreateDto {
   })
   slug: string;
 
+  @ApiPropertyOptional({
+    type: String,
+    description: 'Status',
+    example: 'draft',
+  })
   @IsNotEmpty()
   @IsEnum(Status)
   status: Status;
 
+  @ApiPropertyOptional({ type: String, description: 'Content' })
   @IsString()
   @IsOptional()
   content: string;
@@ -66,6 +87,12 @@ export class PostCreateDto {
   @IsDateString()
   publishOn?: Date;
 
+  @ApiProperty({
+    type: 'array',
+    description: 'Tags',
+    required: true,
+    example: [1, 2, 3],
+  })
   @IsArray()
   @IsOptional()
   @MinLength(3, { each: true })
@@ -84,8 +111,10 @@ export class PostCreateDto {
   metaOptions?: MetaOption;
 
   @ApiProperty({
-    type: Number,
+    type: 'integer',
     description: 'The author of the post',
+    required: true,
+    example: 1,
   })
   @IsNumber()
   authorId: number;
