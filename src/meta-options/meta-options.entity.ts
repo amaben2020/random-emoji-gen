@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Post } from 'src/posts/post.entity';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class MetaOption {
@@ -16,4 +17,7 @@ export class MetaOption {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updateDate: Date;
+
+  @OneToOne(() => Post, (post) => post.metaOptions)
+  post: Post;
 }

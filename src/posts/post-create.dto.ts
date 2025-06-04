@@ -1,18 +1,14 @@
-// import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsArray,
-  // IsDate,
   IsDateString,
   IsEnum,
-  IsJSON,
   IsNotEmpty,
   IsOptional,
   IsString,
   IsUrl,
   Matches,
   MinLength,
-  // ValidateNested,
 } from 'class-validator';
 
 import { MetaOption } from 'src/meta-options/meta-options.entity';
@@ -30,15 +26,6 @@ export enum PostType {
   STORY = 'story',
   SERIES = 'series',
 }
-
-// export class MetaOptionDto {
-//   @IsString()
-//   @IsNotEmpty()
-//   key: string;
-
-//   @IsNotEmpty()
-//   value: any;
-// }
 
 export class PostCreateDto {
   @IsString()

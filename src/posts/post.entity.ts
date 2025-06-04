@@ -58,15 +58,10 @@ export class Post {
   @Column({ type: 'simple-array', nullable: true })
   tags?: string[];
 
-  // @Column({ type: 'json', nullable: true })
-  // metaOptions?: MetaOptionDto[];
-
-  @OneToOne(() => MetaOption, {
+  @OneToOne(() => MetaOption, (metaOption) => metaOption.post, {
     cascade: true,
-    nullable: true,
-    onDelete: 'CASCADE',
     eager: true,
   })
   @JoinColumn()
-  metaOptions?: MetaOption | null;
+  metaOptions?: MetaOption;
 }
