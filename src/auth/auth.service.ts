@@ -9,6 +9,9 @@ import { SignInDto } from './auth-signin.dto';
 import { UsersService } from 'src/users/users.service';
 import { HashingProvider } from './providers/hashing.provider';
 import { JwtService } from '@nestjs/jwt';
+import jwtConfig from './config/jwtConfig';
+import { ConfigType } from '@nestjs/config';
+import { GenerateTokenProvider } from './providers/generate-token.provider';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +21,7 @@ export class AuthService {
 
     private readonly hashProviderService: HashingProvider,
 
-    private jwtService: JwtService,
+    private readonly generateTokenService: GenerateTokenProvider,
   ) {}
   public async signIn(data: SignInDto) {
     const user = await this.userService.findOneByEmail(data.email);
@@ -36,14 +39,6 @@ export class AuthService {
       throw new BadRequestException(`Invalid credentials`);
     }
 
-    const payload = {
-      sub: user.id,
-      email: user.email,
-      userName: user.firstName + ' ' + user.lastName,
-    };
-    return {
-      ...user,
-      accessToken: await this.jwtService.signAsync(payload),
-    };
+    return this.generateTokenService.generateToken(user);
   }
 }
