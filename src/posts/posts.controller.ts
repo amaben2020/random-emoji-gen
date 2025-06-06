@@ -10,6 +10,7 @@ import {
 import { PostsService } from './posts.service';
 import { ApiTags } from '@nestjs/swagger';
 import { PostCreateDto } from './post-create.dto';
+import { CreateManyPostDto } from './create-many-post.dto';
 
 @Controller('posts')
 @ApiTags('Posts')
@@ -29,6 +30,11 @@ export class PostsController {
   createPost(@Body() postData: PostCreateDto) {
     console.log('Post data', postData);
     return this.postsService.createPost(postData);
+  }
+
+  @Post('create-many-posts')
+  createManyPosts(@Body() manyPostsDto: CreateManyPostDto) {
+    return this.postsService.createManyPosts(manyPostsDto);
   }
 
   @Patch(':id')

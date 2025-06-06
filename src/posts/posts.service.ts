@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   forwardRef,
   Inject,
   Injectable,
@@ -7,9 +8,10 @@ import {
 import { PostCreateDto } from './post-create.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from './post.entity';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
 import { TagsService } from 'src/tags/tags.service';
+import { CreateManyPostDto } from './create-many-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -18,6 +20,7 @@ export class PostsService {
     @Inject(forwardRef(() => UsersService))
     private usersService: UsersService,
     private readonly tagsService: TagsService,
+    private dataSource: DataSource,
   ) {}
 
   async findAll(): Promise<Post[]> {
@@ -53,6 +56,49 @@ export class PostsService {
       console.error('Error creating post:', error);
 
       throw new BadRequestException('Post already exists');
+    }
+  }
+
+  public async createManyPosts(manyPostsDto: CreateManyPostDto) {
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      for (const postDto of manyPostsDto.posts) {
+        // Get the author
+        const author = await this.usersService.findOneById(postDto.authorId);
+        if (!author?.id) {
+          throw new Error(`Author with ID ${postDto.authorId} not found`);
+        }
+
+        // Get the tags
+        const tags = await this.tagsService.findByTagIds(postDto?.tags ?? []);
+
+        // Create the post with proper entity relationships
+        const newPost = queryRunner.manager.create(Post, {
+          ...postDto,
+          metaOptions: postDto.metaOptions || {},
+          author,
+          tags,
+        });
+
+        await queryRunner.manager.save(newPost);
+      }
+
+      await queryRunner.commitTransaction();
+
+      return {
+        message: `Posts created successfully`,
+      };
+    } catch (err) {
+      console.log('ERROR ===>', err);
+      // since we have errors lets rollback the changes we made
+      await queryRunner.rollbackTransaction();
+      throw new ConflictException();
+    } finally {
+      // you need to release a queryRunner which was manually instantiated
+      await queryRunner.release();
     }
   }
 
