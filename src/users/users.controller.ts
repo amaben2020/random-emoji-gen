@@ -14,6 +14,7 @@ import { CreateUserDto } from './users-create.dto';
 
 import { UsersService } from './users.service';
 import { ApiTags } from '@nestjs/swagger';
+import { Public } from '../auth/decorator/auth.decorator';
 
 @Controller('users')
 @ApiTags('Users')
@@ -34,6 +35,7 @@ export class UsersController {
     return this.usersService.findOneById(id);
   }
 
+  @Public()
   @Post()
   async createUser(@Body() body: CreateUserDto) {
     return await this.usersService.createUser(body);

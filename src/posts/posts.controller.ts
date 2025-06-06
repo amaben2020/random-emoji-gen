@@ -11,6 +11,7 @@ import { PostsService } from './posts.service';
 import { ApiTags } from '@nestjs/swagger';
 import { PostCreateDto } from './post-create.dto';
 import { CreateManyPostDto } from './create-many-post.dto';
+import { Public } from '../auth/decorator/auth.decorator';
 
 @Controller('posts')
 @ApiTags('Posts')
@@ -21,6 +22,7 @@ export class PostsController {
   // findAll() {
   //   return this.postsService.findAll();
   // }
+  @Public()
   @Get()
   findAll() {
     return this.postsService.findAll();

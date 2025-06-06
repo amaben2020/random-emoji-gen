@@ -8,6 +8,7 @@ import {
 import { SignInDto } from './auth-signin.dto';
 import { UsersService } from 'src/users/users.service';
 import { HashingProvider } from './providers/hashing.provider';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +17,8 @@ export class AuthService {
     private readonly userService: UsersService,
 
     private readonly hashProviderService: HashingProvider,
+
+    private jwtService: JwtService,
   ) {}
   public async signIn(data: SignInDto) {
     const user = await this.userService.findOneByEmail(data.email);
@@ -32,6 +35,15 @@ export class AuthService {
     if (!isPasswordsMatch) {
       throw new BadRequestException(`Invalid credentials`);
     }
-    return user;
+
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      userName: user.firstName + ' ' + user.lastName,
+    };
+    return {
+      ...user,
+      accessToken: await this.jwtService.signAsync(payload),
+    };
   }
 }

@@ -7,8 +7,9 @@ import {
   IsEmail,
   Matches,
   IsNumber,
+  IsEnum,
 } from 'class-validator';
-import { User } from './user.entity';
+import { Role, User } from './user.entity';
 
 export class CreateUserDto
   implements Pick<User, 'email' | 'firstName' | 'lastName'>
@@ -37,6 +38,10 @@ export class CreateUserDto
     message: 'password too weak',
   })
   password: string;
+
+  @IsEnum(Role)
+  @IsNotEmpty()
+  role: Role;
 }
 
 export class GetUserParamDto {
