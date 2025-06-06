@@ -26,6 +26,7 @@ import { AuthModule } from './auth/auth.module';
 import databaseConfig from './database.config';
 import appConfig from './app.config';
 import jwtConfig from './auth/config/jwtConfig';
+import enviromentValidation from 'environment.config';
 
 const ENV = process.env.NODE_ENV ?? 'development';
 
@@ -41,6 +42,7 @@ const ENV = process.env.NODE_ENV ?? 'development';
       isGlobal: true,
       envFilePath: ENV ? `.env.${ENV}` : '.env',
       load: [appConfig, databaseConfig, jwtConfig],
+      validationSchema: enviromentValidation,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
