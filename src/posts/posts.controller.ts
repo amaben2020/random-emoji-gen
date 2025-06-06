@@ -43,4 +43,9 @@ export class PostsController {
   deletePost(@Param('id') id: number) {
     return this.postsService.deletePost(id);
   }
+
+  @Delete('soft-delete/:id')
+  async softDelete(@Param('id') id: number) {
+    return await this.postsService.softRemove(id);
+  }
 }

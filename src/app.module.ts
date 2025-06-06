@@ -22,6 +22,7 @@ import { Tag } from './tags/tag.entity';
 import { MetaOptionsModule } from './meta-options/meta-options.module';
 import { MetaOption } from './meta-options/meta-options.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 import databaseConfig from './database.config';
 import appConfig from './app.config';
 
@@ -57,6 +58,8 @@ const ENV = process.env.NODE_ENV ?? 'development';
     }),
 
     MetaOptionsModule,
+
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [

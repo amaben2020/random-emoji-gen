@@ -14,7 +14,6 @@ import {
 // always remember
 
 import { MetaOption } from 'src/meta-options/meta-options.entity';
-import { Tag } from 'src/tags/tag.entity';
 
 export enum Status {
   DRAFT = 'draft',
@@ -95,7 +94,7 @@ export class PostCreateDto {
     example: ['tag-id-1', 'tag-id-2', 'tag-id-3'],
   })
   @IsOptional()
-  @IsArray({ each: true })
+  @IsArray()
   tags?: string[];
 
   //Nested object [{key:string,value:any},...]

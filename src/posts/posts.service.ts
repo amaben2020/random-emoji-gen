@@ -25,6 +25,7 @@ export class PostsService {
       relations: {
         author: true,
         tags: true,
+        metaOptions: true,
       },
     });
   }
@@ -187,5 +188,14 @@ export class PostsService {
     await this.postRepository.delete(id);
 
     return { deleted: true, id };
+  }
+
+  public async softRemove(id: number) {
+    await this.postRepository.softDelete(id);
+
+    return {
+      delete: true,
+      id,
+    };
   }
 }

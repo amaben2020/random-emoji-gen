@@ -1,5 +1,6 @@
 import {
   Column,
+  DeleteDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
@@ -75,4 +76,9 @@ export class Post {
   @ManyToMany(() => Tag, (tag) => tag.posts, { onDelete: 'CASCADE' })
   @JoinTable()
   tags?: Tag[];
+
+  @DeleteDateColumn({
+    default: null,
+  })
+  deletedAt?: Date;
 }
