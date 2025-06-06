@@ -77,4 +77,15 @@ export class UsersService {
       throw new BadRequestException(`User with ID ${id} not found`);
     }
   }
+
+  public async findOneByEmail(email: string): Promise<User | null> {
+    try {
+      const user = await this.userRepository.findOneBy({ email });
+
+      return user;
+    } catch (error) {
+      console.error(error);
+      throw new BadRequestException(`User with EMAIL ${email} not found`);
+    }
+  }
 }
