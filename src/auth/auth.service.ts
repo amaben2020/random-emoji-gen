@@ -29,7 +29,7 @@ export class AuthService {
 
     const isPasswordsMatch = await this.hashProviderService.comparePasswords(
       data.password,
-      user.password,
+      user.password!,
     );
 
     if (!isPasswordsMatch) {
