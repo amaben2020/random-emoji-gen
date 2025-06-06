@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 import { User } from './user.entity';
 
-export class UsersCreateDto
+export class CreateUserDto
   implements Pick<User, 'email' | 'firstName' | 'lastName'>
 {
   @IsString()

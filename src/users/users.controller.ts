@@ -10,7 +10,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { UsersCreateDto } from './users-create.dto';
+import { CreateUserDto } from './users-create.dto';
 
 import { UsersService } from './users.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -35,7 +35,7 @@ export class UsersController {
   }
 
   @Post()
-  async createUser(@Body() body: UsersCreateDto) {
+  async createUser(@Body() body: CreateUserDto) {
     return await this.usersService.createUser(body);
     // return `${request.email} ${request.firstName} ${request.lastName} ${request.password} has been created!`;
   }

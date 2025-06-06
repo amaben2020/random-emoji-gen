@@ -34,6 +34,7 @@ const ENV = process.env.NODE_ENV ?? 'development';
     UsersModule,
     PostsModule,
     TagsModule,
+    AuthModule,
     MetaOptionsModule,
     ConfigModule.forRoot({
       isGlobal: true,

@@ -8,10 +8,10 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
-import { PostsService } from 'src/posts/posts.service';
-import { UsersCreateDto } from './users-create.dto';
+import { CreateUserDto } from './users-create.dto';
 import { ConfigService, ConfigType } from '@nestjs/config';
 import profileConfig from './config/profile.config';
+import { HashingProvider } from 'src/auth/providers/hashing.provider';
 
 @Injectable()
 export class UsersService {
@@ -19,8 +19,8 @@ export class UsersService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
 
-    // @Inject(forwardRef(() => PostsService))
-    // private postService: PostsService,
+    @Inject(forwardRef(() => HashingProvider))
+    private hashProviderService: HashingProvider,
 
     private readonly configService: ConfigService,
 
@@ -28,24 +28,21 @@ export class UsersService {
     private readonly profileConfiguration: ConfigType<typeof profileConfig>,
   ) {}
 
-  public createUser(createUserDto: UsersCreateDto) {
-    return this.userRepository.save(createUserDto);
+  public async createUser(createUserDto: CreateUserDto) {
+    const hashPassword = await this.hashProviderService.hashPassword(
+      createUserDto.password,
+    );
+
+    return this.userRepository.save({
+      ...createUserDto,
+      password: hashPassword,
+    });
   }
+
   public async findAll(limit: number, offset: number) {
     try {
-      // return `This action returns all users  ${limit} ${offset}`;
-      // const posts = this.postService.findAll();
-      // console.log('Posts', posts);
-      // console.log(
-      //   'Environment variable DB_HOST',
-      //   this.configService.get<string>('DB_HOST'),
-      // );
-
-      // console.log('API KEY', this.profileConfiguration.apiKey);
-      // console.log('node env', process.env.NODE_ENV);
-
       let users = undefined;
-      // wrap in trycatch any db requests
+      // wrap in try catch any db requests
       try {
         users = await this.userRepository.find({
           relations: {
