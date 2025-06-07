@@ -23,10 +23,13 @@ import { MetaOptionsModule } from './meta-options/meta-options.module';
 import { MetaOption } from './meta-options/meta-options.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { WalletModule } from './wallet/wallet.module';
+import { WalletController } from './wallet/wallet.controller';
 import databaseConfig from './database.config';
 import appConfig from './app.config';
 import jwtConfig from './auth/config/jwtConfig';
 import enviromentValidation from 'environment.config';
+import { Wallet } from './wallet/wallet.entity';
 
 const ENV = process.env.NODE_ENV ?? 'development';
 
@@ -37,6 +40,7 @@ const ENV = process.env.NODE_ENV ?? 'development';
     PostsModule,
     TagsModule,
     AuthModule,
+    WalletModule,
     MetaOptionsModule,
     ConfigModule.forRoot({
       isGlobal: true,
@@ -57,15 +61,17 @@ const ENV = process.env.NODE_ENV ?? 'development';
         synchronize: configService.get('database.synchronize')!, // do not use in production!
         autoLoadEntities: configService.get('database.autoLoadEntities')!,
         // add every entity here
-        entities: [User, Post, Tag, MetaOption],
+        entities: [User, Post, Tag, MetaOption, Wallet],
       }),
     }),
 
     MetaOptionsModule,
 
     AuthModule,
+
+    WalletModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, WalletController],
   providers: [
     AppService,
     LoggerService,
