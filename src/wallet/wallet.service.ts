@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import * as crypto from 'crypto';
 import { Repository } from 'typeorm';
 import { Wallet } from './wallet.entity';
@@ -94,5 +99,42 @@ export class WalletService {
     }
 
     return wallet;
+  }
+
+  async validateUserWallet(
+    email: string,
+    amount: number | string,
+  ): Promise<boolean> {
+    const wallet = await this.walletRepository.findOne({
+      relations: {
+        user: true,
+      },
+      where: { user: { email } },
+    });
+
+    if (!wallet) {
+      throw new NotFoundException('Wallet not found for the given email.');
+    }
+
+    return wallet.balance >= Number(amount);
+  }
+
+  async withdrawFromWallet(userEmail: string, amount: number) {
+    const wallet = await this.walletRepository.findOne({
+      relations: {
+        user: true,
+      },
+      where: { user: { email: userEmail } },
+    });
+
+    if (!wallet)
+      throw new NotFoundException('Wallet not found for the given email.');
+
+    if (amount > wallet.balance)
+      throw new BadRequestException('Insufficient funds in your wallet.');
+
+    wallet.balance = +wallet?.balance - amount;
+
+    return await this.walletRepository.save(wallet);
   }
 }

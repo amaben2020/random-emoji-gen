@@ -31,6 +31,7 @@ import jwtConfig from './auth/config/jwtConfig';
 import enviromentValidation from 'environment.config';
 import { Wallet } from './wallet/wallet.entity';
 import { paystackConfig } from './wallet/config/paystackConfig';
+import { VtpassModule } from './vtpass/vtpass.module';
 
 const ENV = process.env.NODE_ENV ?? 'development';
 
@@ -43,6 +44,7 @@ const ENV = process.env.NODE_ENV ?? 'development';
     AuthModule,
     WalletModule,
     MetaOptionsModule,
+    VtpassModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ENV ? `.env.${ENV}` : '.env',
@@ -71,6 +73,8 @@ const ENV = process.env.NODE_ENV ?? 'development';
     AuthModule,
 
     WalletModule,
+
+    VtpassModule,
   ],
   controllers: [AppController, WalletController],
   providers: [
