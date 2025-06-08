@@ -40,6 +40,7 @@ export class UsersService {
   }
 
   public async findAll(limit: number, offset: number) {
+    console.log(limit, offset);
     try {
       let users = undefined;
       // wrap in try catch any db requests

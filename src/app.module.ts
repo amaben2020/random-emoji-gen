@@ -30,6 +30,7 @@ import appConfig from './app.config';
 import jwtConfig from './auth/config/jwtConfig';
 import enviromentValidation from 'environment.config';
 import { Wallet } from './wallet/wallet.entity';
+import { paystackConfig } from './wallet/config/paystackConfig';
 
 const ENV = process.env.NODE_ENV ?? 'development';
 
@@ -45,7 +46,7 @@ const ENV = process.env.NODE_ENV ?? 'development';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ENV ? `.env.${ENV}` : '.env',
-      load: [appConfig, databaseConfig, jwtConfig],
+      load: [appConfig, databaseConfig, jwtConfig, paystackConfig],
       validationSchema: enviromentValidation,
     }),
     TypeOrmModule.forRootAsync({

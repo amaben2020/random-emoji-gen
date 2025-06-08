@@ -1,10 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import * as crypto from 'crypto';
 import { Repository } from 'typeorm';
 import { Wallet } from './wallet.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersService } from 'src/users/users.service';
 import { PaystackPaymentData } from './paystack.interface';
+import { ConfigType } from '@nestjs/config';
+import { paystackConfig } from './config/paystackConfig';
 
 @Injectable()
 export class WalletService {
@@ -13,6 +15,9 @@ export class WalletService {
     private readonly walletRepository: Repository<Wallet>,
 
     private readonly userService: UsersService,
+
+    @Inject(paystackConfig.KEY)
+    private readonly paystackConfiguration: ConfigType<typeof paystackConfig>,
   ) {}
 
   verifyWebhook(body: any, signature: string): boolean {
@@ -21,7 +26,7 @@ export class WalletService {
     }
 
     const hash = crypto
-      .createHmac('sha512', 'sk_test_0c1f79ca05de05c05b0cdbf0b48d148999239357')
+      .createHmac('sha512', this.paystackConfiguration.secretKey as string)
       .update(JSON.stringify(body))
       .digest('hex');
 
