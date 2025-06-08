@@ -1,38 +1,19 @@
-// import { Injectable } from '@nestjs/common';
-
-// @Injectable()
-// export class WalletService {
-//   public test() {
-//     return 'test';
-//   }
-// }
-
-//@ts-nocheck
-
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
 import { Repository } from 'typeorm';
 import { Wallet } from './wallet.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersService } from 'src/users/users.service';
+import { PaystackPaymentData } from './paystack.interface';
 
 @Injectable()
 export class WalletService {
-  private readonly paystackSecretKey: string;
-
   constructor(
-    private configService: ConfigService,
-
     @InjectRepository(Wallet)
     private readonly walletRepository: Repository<Wallet>,
 
     private readonly userService: UsersService,
-  ) {
-    // this.paystackSecretKey = this.configService.get<string>(
-    //   'PAYSTACK_SECRET_KEY',
-    // );
-  }
+  ) {}
 
   verifyWebhook(body: any, signature: string): boolean {
     if (!signature) {
@@ -47,9 +28,7 @@ export class WalletService {
     return hash === signature;
   }
 
-  async handleSuccessfulPayment(data: any) {
-    console.log('data success from Paystack webhook:', data);
-
+  async handleSuccessfulPayment(data: PaystackPaymentData) {
     const paymentDetails = {
       reference: data.reference,
       amount: data.amount / 100, // Convert from kobo to Naira
@@ -58,11 +37,9 @@ export class WalletService {
       metadata: data.metadata,
     };
 
-    // Find the user
     const user = await this.userService.findOneByEmail(
       paymentDetails.customerEmail,
     );
-    console.log('User ====>', user);
 
     if (!user) {
       throw new Error('User not found');
@@ -73,19 +50,17 @@ export class WalletService {
       where: { user: { id: user.id } },
     });
 
-    console.log('paymentDetails.amount', paymentDetails.amount);
-
     if (wallet) {
       // Update existing wallet
       wallet.balance = +wallet.balance + +paymentDetails.amount;
-      wallet.ref = paymentDetails.reference as string;
+      wallet.ref = paymentDetails.reference;
     } else {
       // Create new wallet if doesn't exist
       wallet = this.walletRepository.create({
         user: user,
         balance: paymentDetails.amount,
         currency: 'NGN',
-        accountNumber: '0123456789', // Consider generating a unique account number
+        accountNumber: '0123456789',
         ref: paymentDetails.reference,
       });
     }
@@ -93,9 +68,13 @@ export class WalletService {
     return await this.walletRepository.save(wallet);
   }
 
-  async handleSuccessfulTransfer(data: any) {}
+  handleSuccessfulTransfer(data: any) {
+    console.log(data);
+  }
 
-  async handleNewSubscription(data: any) {}
+  handleNewSubscription(data: any) {
+    console.log(data);
+  }
 
   async viewUserWallet(email: string) {
     const wallet = await this.walletRepository.findOne({

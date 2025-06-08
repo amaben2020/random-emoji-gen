@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Headers,
-  HttpCode,
   HttpException,
   HttpStatus,
   Post,
@@ -11,26 +10,16 @@ import {
 } from '@nestjs/common';
 import { WalletService } from './wallet.service';
 import { Public } from 'src/auth/decorator/auth.decorator';
-//@ts-nocheck
+import { PaystackWebhookBody } from './paystack.interface';
 
 @Controller('wallet')
 export class WalletController {
   constructor(private walletService: WalletService) {}
-  @Get('')
-  test() {
-    // return this.walletService.test();
-  }
 
-  // @Public()
-  // @Post('webhook')
-  // paystackWebhook(@Body() body: any) {
-  //   console.log('PAYSTACK PAYMENT WEBHOOK', body);
-  //   return body!;
-  // }
   @Public()
   @Post('webhook')
   async handleWebhook(
-    @Body() body: any,
+    @Body() body: PaystackWebhookBody,
     @Headers('x-paystack-signature') signature: string,
   ) {
     // 1. Verify the webhook signature
@@ -45,8 +34,6 @@ export class WalletController {
       const event = body.event;
       const data = body.data;
 
-      // this.logger.log(`Received Paystack webhook event: ${event}`);
-
       switch (event) {
         case 'charge.success':
           await this.walletService.handleSuccessfulPayment(data);
@@ -60,7 +47,6 @@ export class WalletController {
           await this.walletService.handleNewSubscription(data);
           break;
 
-        // Add other events as needed
         default:
         // this.logger.log(`Unhandled event type: ${event}`);
       }
