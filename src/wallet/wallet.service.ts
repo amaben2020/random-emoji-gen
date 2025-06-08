@@ -78,7 +78,7 @@ export class WalletService {
     if (wallet) {
       // Update existing wallet
       wallet.balance = +wallet.balance + +paymentDetails.amount;
-      wallet.ref = paymentDetails.reference;
+      wallet.ref = paymentDetails.reference as string;
     } else {
       // Create new wallet if doesn't exist
       wallet = this.walletRepository.create({
