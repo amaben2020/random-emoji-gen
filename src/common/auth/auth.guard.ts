@@ -13,11 +13,11 @@ export class AuthGuard implements CanActivate {
     this.logger.log('LIFECYLCE 2: INIT GUARD');
 
     const request = context.switchToHttp().getRequest();
-
+    console.log('AUTH GUARD STOPPED');
     const apiKey = request.headers['x-api-key'];
 
-    if (apiKey === 'SECRET') return true;
+    // if (apiKey === 'SECRET') return true;
 
-    return false;
+    return true;
   }
 }

@@ -5,7 +5,9 @@ import {
   Headers,
   HttpCode,
   HttpException,
+  HttpStatus,
   Post,
+  Query,
 } from '@nestjs/common';
 import { WalletService } from './wallet.service';
 import { Public } from 'src/auth/decorator/auth.decorator';
@@ -34,12 +36,9 @@ export class WalletController {
     // 1. Verify the webhook signature
     const isValid = this.walletService.verifyWebhook(body, signature);
 
-    console.log('IS VALID', isValid);
-
-    // if (!isValid) {
-    //   this.logger.warn('Invalid webhook signature');
-    //   throw new HttpException('Invalid signature', HttpStatus.FORBIDDEN);
-    // }
+    if (!isValid) {
+      throw new HttpException('Invalid signature', HttpStatus.FORBIDDEN);
+    }
 
     // 2. Process based on event type
     try {
@@ -72,5 +71,11 @@ export class WalletController {
       // throw new HttpException();
       console.log(error);
     }
+  }
+
+  @Public()
+  @Get('view-wallet')
+  async viewUserWallet(@Query('email') email: string) {
+    return await this.walletService.viewUserWallet(email);
   }
 }

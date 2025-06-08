@@ -1,5 +1,11 @@
 import { User } from 'src/users/user.entity';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Wallet {
@@ -11,6 +17,18 @@ export class Wallet {
 
   @OneToOne(() => User, (user) => user.wallet, {})
   user: User;
+
+  @Column({ type: 'varchar' })
+  accountNumber: string;
+
+  @Column({ type: 'varchar' })
+  currency: 'NGN';
+
+  @CreateDateColumn({ type: 'varchar' })
+  createdAt: Date;
+
+  @Column({ type: 'varchar' })
+  ref: string;
 
   // TODO: Create transaction relation
 }

@@ -86,4 +86,7 @@ export class User {
   })
   @JoinColumn()
   wallet?: Wallet;
+
+  @Column({ type: 'boolean', default: false })
+  isVerified: boolean;
 }
