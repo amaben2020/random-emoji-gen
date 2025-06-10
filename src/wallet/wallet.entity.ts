@@ -1,8 +1,11 @@
+import { Transaction } from 'src/transactions/transactions.entity';
 import { User } from 'src/users/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -30,5 +33,7 @@ export class Wallet {
   @Column({ type: 'varchar' })
   ref: string;
 
-  // TODO: Create transaction relation
+  @ManyToOne(() => Transaction, (transaction) => transaction.wallet, {})
+  @JoinTable()
+  transactions: Transaction[];
 }

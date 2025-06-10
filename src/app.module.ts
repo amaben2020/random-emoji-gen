@@ -32,6 +32,8 @@ import enviromentValidation from 'environment.config';
 import { Wallet } from './wallet/wallet.entity';
 import { paystackConfig } from './wallet/config/paystackConfig';
 import { VtpassModule } from './vtpass/vtpass.module';
+import { TransactionsModule } from './transactions/transactions.module';
+import { Transaction } from './transactions/transactions.entity';
 
 const ENV = process.env.NODE_ENV ?? 'development';
 
@@ -45,6 +47,7 @@ const ENV = process.env.NODE_ENV ?? 'development';
     WalletModule,
     MetaOptionsModule,
     VtpassModule,
+    Transaction,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ENV ? `.env.${ENV}` : '.env',
@@ -64,7 +67,7 @@ const ENV = process.env.NODE_ENV ?? 'development';
         synchronize: configService.get('database.synchronize')!, // do not use in production!
         autoLoadEntities: configService.get('database.autoLoadEntities')!,
         // add every entity here
-        entities: [User, Post, Tag, MetaOption, Wallet],
+        entities: [User, Post, Tag, MetaOption, Wallet, Transaction],
       }),
     }),
 
@@ -75,6 +78,8 @@ const ENV = process.env.NODE_ENV ?? 'development';
     WalletModule,
 
     VtpassModule,
+
+    TransactionsModule,
   ],
   controllers: [AppController, WalletController],
   providers: [
