@@ -7,7 +7,7 @@ export class createTransactionDto {
 
   @IsNumber()
   @IsNotEmpty()
-  wallet: number;
+  walletId: number;
 
   @IsNumber()
   @IsNotEmpty()

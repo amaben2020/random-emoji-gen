@@ -34,6 +34,8 @@ import { paystackConfig } from './wallet/config/paystackConfig';
 import { VtpassModule } from './vtpass/vtpass.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { Transaction } from './transactions/transactions.entity';
+import { SendModule } from './send/send.module';
+import { ReceiveModule } from './receive/receive.module';
 
 const ENV = process.env.NODE_ENV ?? 'development';
 
@@ -47,6 +49,7 @@ const ENV = process.env.NODE_ENV ?? 'development';
     WalletModule,
     MetaOptionsModule,
     VtpassModule,
+    SendModule,
     Transaction,
     ConfigModule.forRoot({
       isGlobal: true,
@@ -80,6 +83,10 @@ const ENV = process.env.NODE_ENV ?? 'development';
     VtpassModule,
 
     TransactionsModule,
+
+    SendModule,
+
+    ReceiveModule,
   ],
   controllers: [AppController, WalletController],
   providers: [

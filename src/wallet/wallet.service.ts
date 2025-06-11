@@ -112,11 +112,11 @@ export class WalletService {
       where: { user: { email } },
     });
 
-    if (!wallet) {
+    if (!wallet?.id) {
       throw new NotFoundException('Wallet not found for the given email.');
     }
 
-    return wallet.balance >= Number(amount);
+    return Number(wallet.balance) >= Number(amount);
   }
 
   async withdrawFromWallet(userEmail: string, amount: number) {
@@ -137,4 +137,40 @@ export class WalletService {
 
     return await this.walletRepository.save(wallet);
   }
+
+  async updateWalletBalance(email: string, amount: number): Promise<Wallet> {
+    // 1. Find the wallet with a lock to prevent race conditions
+    const wallet = await this.walletRepository.findOne({
+      where: { user: { email } },
+
+      relations: ['user'], // Eager load user if needed
+      // lock: { mode: 'pessimistic_write' }, // Critical for concurrent updates
+    });
+
+    if (!wallet) {
+      throw new Error('Wallet not found');
+    }
+
+    // 2. Validate business logic (e.g., prevent negative balance)
+    if (wallet.balance + amount < 0) {
+      throw new Error('Insufficient funds');
+    }
+
+    // 3. Update balance atomically
+    wallet.balance = Number(wallet.balance) + Number(amount);
+
+    // 4. Save and return updated wallet
+    return await this.walletRepository.save(wallet);
+  }
 }
+
+// Transaction Example:
+// await dataSource.transaction(async (manager) => {
+//   const wallet = await manager.findOne(Wallet, { where: { id: 1 } });
+//   wallet.balance += 100;
+
+//   const user = await manager.findOne(User, { where: { id: 2 } });
+//   user.lastPayment = new Date();
+
+//   await manager.save([wallet, user]); // Flushes ALL changes in one transaction
+// });

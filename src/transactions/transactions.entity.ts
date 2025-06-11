@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import { Wallet } from 'src/wallet/wallet.entity';
 // always confirm its from typeorm and not sequelize
 import {
@@ -20,11 +21,23 @@ export class Transaction {
   @Column({ type: 'int', default: 0 })
   amount: number;
 
-  @UpdateDateColumn({ type: 'timestamp' })
-  updatedAt: Date;
+  @UpdateDateColumn({
+    type: 'timestamp with time zone',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  @Transform(({ value }: { value: Date | null | undefined }) =>
+    value?.toISOString(),
+  )
+  updatedAt!: Date;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  createdAt: Date;
+  @CreateDateColumn({
+    type: 'timestamp with time zone',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  @Transform(({ value }: { value: Date | null | undefined }) =>
+    value?.toISOString(),
+  )
+  createdAt!: Date;
 
   @ManyToOne(() => Wallet, (wallet) => wallet.transactions, {
     onDelete: 'CASCADE',
