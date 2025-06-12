@@ -11,7 +11,7 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './users-create.dto';
 import { ConfigService, ConfigType } from '@nestjs/config';
 import profileConfig from './config/profile.config';
-import { HashingProvider } from 'src/auth/providers/hashing.provider';
+import { HashingProvider } from '../auth/providers/hashing.provider';
 
 @Injectable()
 export class UsersService {

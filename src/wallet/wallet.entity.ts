@@ -1,5 +1,5 @@
-import { Transaction } from 'src/transactions/transactions.entity';
-import { User } from 'src/users/user.entity';
+import { Transaction } from '../transactions/transactions.entity';
+import { User } from '../users/user.entity';
 import {
   Column,
   CreateDateColumn,

@@ -1,6 +1,6 @@
 import { Exclude } from 'class-transformer';
-import { Post } from 'src/posts/post.entity';
-import { Wallet } from 'src/wallet/wallet.entity';
+import { Post } from '../posts/post.entity';
+import { Wallet } from '../wallet/wallet.entity';
 import {
   Entity,
   Column,

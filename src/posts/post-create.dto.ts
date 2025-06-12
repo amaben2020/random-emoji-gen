@@ -13,7 +13,7 @@ import {
 } from 'class-validator';
 // always remember
 
-import { MetaOption } from 'src/meta-options/meta-options.entity';
+import { MetaOption } from '../meta-options/meta-options.entity';
 
 export enum Status {
   DRAFT = 'draft',

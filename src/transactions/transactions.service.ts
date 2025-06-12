@@ -3,7 +3,7 @@ import { createTransactionDto } from './dtos/create-transaction.dto';
 import { Transaction } from './transactions.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Wallet } from 'src/wallet/wallet.entity';
+import { Wallet } from '../wallet/wallet.entity';
 
 @Injectable()
 export class TransactionsService {

@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { Wallet } from 'src/wallet/wallet.entity';
+import { Wallet } from '../wallet/wallet.entity';
 // always confirm its from typeorm and not sequelize
 import {
   CreateDateColumn,

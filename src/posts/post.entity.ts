@@ -9,9 +9,9 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { PostType, Status } from './post-create.dto';
-import { MetaOption } from 'src/meta-options/meta-options.entity';
-import { User } from 'src/users/user.entity';
-import { Tag } from 'src/tags/tag.entity';
+import { MetaOption } from '../meta-options/meta-options.entity';
+import { User } from '../users/user.entity';
+import { Tag } from '../tags/tag.entity';
 
 @Entity()
 export class Post {

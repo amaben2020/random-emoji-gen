@@ -5,10 +5,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import * as crypto from 'crypto';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { Wallet } from './wallet.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { PaystackPaymentData } from './paystack.interface';
 import { ConfigType } from '@nestjs/config';
 import { paystackConfig } from './config/paystackConfig';
@@ -104,8 +104,12 @@ export class WalletService {
   async validateUserWallet(
     email: string,
     amount: number | string,
+    manager?: EntityManager,
   ): Promise<boolean> {
-    const wallet = await this.walletRepository.findOne({
+    const walletRepository = manager
+      ? manager.getRepository(Wallet)
+      : this.walletRepository;
+    const wallet = await walletRepository.findOne({
       relations: {
         user: true,
       },
@@ -138,13 +142,19 @@ export class WalletService {
     return await this.walletRepository.save(wallet);
   }
 
-  async updateWalletBalance(email: string, amount: number): Promise<Wallet> {
+  async updateWalletBalance(
+    email: string,
+    amount: number,
+    manager?: EntityManager,
+  ): Promise<Wallet> {
     // 1. Find the wallet with a lock to prevent race conditions
-    const wallet = await this.walletRepository.findOne({
+    const walletRepository = manager
+      ? manager.getRepository(Wallet)
+      : this.walletRepository;
+    const wallet = await walletRepository.findOne({
       where: { user: { email } },
 
-      relations: ['user'], // Eager load user if needed
-      // lock: { mode: 'pessimistic_write' }, // Critical for concurrent updates
+      relations: ['user'],
     });
 
     if (!wallet) {
@@ -160,33 +170,8 @@ export class WalletService {
     wallet.balance = Number(wallet.balance) + Number(amount);
 
     // 4. Save and return updated wallet
-    return await this.walletRepository.save(wallet);
+    return await walletRepository.save(wallet);
   }
-
-  // async updateWalletBalance(
-  //   email: string,
-  //   amount: number,
-  //   transactionalEntityManager?: EntityManager, // Accept optional manager
-  // ) {
-  //   const manager = transactionalEntityManager || this.walletRepository.manager;
-
-  //   const wallet = await manager.findOne(Wallet, {
-  //     where: { user: { email } },
-  //     lock: { mode: 'pessimistic_write' },
-  //   });
-
-  //   if (!wallet) throw new Error('Wallet not found');
-
-  //   const balanceBeforeTransfer = wallet.balance;
-  //   wallet.balance += amount;
-
-  //   await manager.save(wallet);
-  //   return {
-  //     balanceBeforeTransfer,
-  //     balanceAfterTransfer: wallet.balance,
-  //     walletId: wallet.id,
-  //   };
-  // }
 }
 
 // Transaction Example:
