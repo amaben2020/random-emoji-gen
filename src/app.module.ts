@@ -36,6 +36,8 @@ import { TransactionsModule } from './transactions/transactions.module';
 import { Transaction } from './transactions/transactions.entity';
 import { SendModule } from './send/send.module';
 import { ReceiveModule } from './receive/receive.module';
+import { UnitOfWorkService } from './unit-of-work/unit-of-work.service';
+import { UnitOfWorkModule } from './unit-of-work/unit-of-work.module';
 
 const ENV = process.env.NODE_ENV ?? 'development';
 
@@ -51,6 +53,7 @@ const ENV = process.env.NODE_ENV ?? 'development';
     VtpassModule,
     SendModule,
     Transaction,
+    UnitOfWorkModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ENV ? `.env.${ENV}` : '.env',
@@ -87,6 +90,8 @@ const ENV = process.env.NODE_ENV ?? 'development';
     SendModule,
 
     ReceiveModule,
+
+    UnitOfWorkModule,
   ],
   controllers: [AppController, WalletController],
   providers: [
@@ -100,6 +105,7 @@ const ENV = process.env.NODE_ENV ?? 'development';
       provide: 'APP_INTERCEPTOR',
       useClass: TransformResponseInterceptor,
     },
+    UnitOfWorkService,
     // {
     //   provide: 'APP_FILTER',
     //   useClass: AllExceptionsFilter,

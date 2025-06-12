@@ -162,6 +162,31 @@ export class WalletService {
     // 4. Save and return updated wallet
     return await this.walletRepository.save(wallet);
   }
+
+  // async updateWalletBalance(
+  //   email: string,
+  //   amount: number,
+  //   transactionalEntityManager?: EntityManager, // Accept optional manager
+  // ) {
+  //   const manager = transactionalEntityManager || this.walletRepository.manager;
+
+  //   const wallet = await manager.findOne(Wallet, {
+  //     where: { user: { email } },
+  //     lock: { mode: 'pessimistic_write' },
+  //   });
+
+  //   if (!wallet) throw new Error('Wallet not found');
+
+  //   const balanceBeforeTransfer = wallet.balance;
+  //   wallet.balance += amount;
+
+  //   await manager.save(wallet);
+  //   return {
+  //     balanceBeforeTransfer,
+  //     balanceAfterTransfer: wallet.balance,
+  //     walletId: wallet.id,
+  //   };
+  // }
 }
 
 // Transaction Example:
