@@ -34,13 +34,11 @@ export class ReceiveService {
         senderId: senderEmail,
         receiverId: recipientEmail,
         amount,
-        senderBalanceBeforeTransfer: senderBalance.balance,
-        receiverBalanceAfterTransfer: receiverBalance.balance,
       };
       await this.transactionService.createTransaction({
         amount: transactionData.amount,
         title: `${transactionData.senderId} successfully transferred to ${transactionData.receiverId}`,
-        walletId: receiverBalance.id,
+        walletId: receiverBalance?.id,
       });
       // Commit if all succeeds
       await this.unitOfWorkService.commitTransaction();
