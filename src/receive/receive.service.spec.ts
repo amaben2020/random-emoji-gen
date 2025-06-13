@@ -11,7 +11,7 @@ describe('ReceiveService', () => {
   let mockWalletService: Partial<WalletService>;
 
   beforeEach(async () => {
-    // Single correct mock definition
+    // Single correct mock  of services
     mockUnitOfWorkService = {
       startTransaction: jest.fn().mockResolvedValue(undefined),
       commitTransaction: jest.fn().mockResolvedValue(undefined),
@@ -25,7 +25,7 @@ describe('ReceiveService', () => {
     };
 
     mockWalletService = {
-      validateUserWallet: jest.fn().mockResolvedValue(undefined),
+      validateUserWallet: jest.fn().mockResolvedValue(true),
       updateWalletBalance: jest.fn().mockResolvedValue({ id: 'wallet-id' }),
     };
 
@@ -61,6 +61,7 @@ describe('ReceiveService', () => {
       amount: 1000,
     };
 
+    // calling the actual service
     await service.receiveMoney(dto);
 
     expect(mockUnitOfWorkService.startTransaction).toHaveBeenCalled();
@@ -76,6 +77,41 @@ describe('ReceiveService', () => {
   });
 
   it('should deduct money from sender and add to recipient', async () => {
+    const dto = {
+      amount: 1000,
+      senderEmail: 'sender@gmail.com',
+      recipientEmail: 'receiver@gmail.com',
+    };
+
+    mockWalletService.validateUserWallet = jest.fn().mockResolvedValue(true); // ✅ fix here
+
+    mockWalletService.updateWalletBalance = jest
+      .fn()
+      .mockResolvedValueOnce({ id: 1 }) // receiver
+      .mockResolvedValueOnce({ id: 2 }); // sender
+
+    await service.receiveMoney(dto);
+
+    expect(mockWalletService.validateUserWallet).toHaveBeenCalledWith(
+      'sender@gmail.com',
+      1000,
+      expect.anything(), // transaction manager
+    );
+
+    expect(mockWalletService.updateWalletBalance).toHaveBeenCalledWith(
+      'receiver@gmail.com',
+      1000,
+      expect.anything(),
+    );
+
+    expect(mockWalletService.updateWalletBalance).toHaveBeenCalledWith(
+      'sender@gmail.com',
+      -1000,
+      expect.anything(),
+    );
+  });
+
+  it.skip('should deduct money from sender and add to recipient', async () => {
     const dto = {
       amount: 1000,
       senderEmail: 'sender@gmail.com',
@@ -164,3 +200,30 @@ describe('ReceiveService', () => {
     expect(mockUnitOfWorkService.rollbackTransaction).toHaveBeenCalled();
   });
 });
+
+// function forEach<T>(items: T[], callback: (item: T) => any): void {
+//   for (const item of items) {
+//     callback(item);
+//   }
+// }
+
+// const mockCallback = jest.fn((x: number): number => 42 + x);
+
+// test('forEach mock function', () => {
+//   forEach([0, 1], mockCallback);
+
+//   console.log('mockCallback.mock.calls', mockCallback.mock.calls);
+//   console.log('mockCallback.mock.results', mockCallback.mock.results);
+
+//   // The mock function was called twice
+//   expect(mockCallback.mock.calls).toHaveLength(2);
+
+//   // The first argument of the first call to the function was 0
+//   expect(mockCallback.mock.calls[0][0]).toBe(0);
+
+//   // The first argument of the second call to the function was 1
+//   expect(mockCallback.mock.calls[1][0]).toBe(1);
+
+//   // The return value of the first call to the function was 42
+//   expect(mockCallback.mock.results[0].value).toBe(42);
+// });

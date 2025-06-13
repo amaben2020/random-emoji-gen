@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { LoggerService } from 'src/logger.service';
+import { LoggerService } from '../../logger.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

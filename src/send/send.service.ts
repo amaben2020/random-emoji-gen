@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { TransactionsService } from 'src/transactions/transactions.service';
-import { WalletService } from 'src/wallet/wallet.service';
+import { TransactionsService } from '../transactions/transactions.service';
+import { WalletService } from '../wallet/wallet.service';
 
 @Injectable()
 export class SendService {

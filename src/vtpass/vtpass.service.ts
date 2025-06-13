@@ -1,7 +1,7 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { PurchaseAirtelDataDto } from './dtos/create-airtime.dto';
 import axios from 'axios';
-import { WalletService } from 'src/wallet/wallet.service';
+import { WalletService } from '../wallet/wallet.service';
 import { ConfigType } from '@nestjs/config';
 import { vtPassConfig } from './config/vtPassConfig';
 

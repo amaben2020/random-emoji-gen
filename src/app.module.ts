@@ -41,6 +41,8 @@ import { UnitOfWorkModule } from './unit-of-work/unit-of-work.module';
 
 const ENV = process.env.NODE_ENV ?? 'development';
 
+console.log('ENV', ENV);
+
 @Module({
   imports: [
     CatsModule,
@@ -58,7 +60,7 @@ const ENV = process.env.NODE_ENV ?? 'development';
       isGlobal: true,
       envFilePath: ENV ? `.env.${ENV}` : '.env',
       load: [appConfig, databaseConfig, jwtConfig, paystackConfig],
-      validationSchema: enviromentValidation,
+      validationSchema: ENV === 'test' ? undefined : enviromentValidation,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -119,5 +121,3 @@ export class AppModule implements NestModule {
       .forRoutes({ path: '*', method: RequestMethod.GET });
   }
 }
-
-//

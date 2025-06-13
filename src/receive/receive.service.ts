@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { TransactionsService } from '../transactions/transactions.service';
 import { UnitOfWorkService } from '../unit-of-work/unit-of-work.service';
 import { WalletService } from '../wallet/wallet.service';
@@ -23,7 +23,18 @@ export class ReceiveService {
     try {
       // step 1: check balance of sender and receiver
 
-      await this.walletService.validateUserWallet(senderEmail, amount, manager);
+      // await this.walletService.validateUserWallet(senderEmail, amount, manager);
+      const isSufficient = await this.walletService.validateUserWallet(
+        senderEmail,
+        amount,
+        manager,
+      );
+      console.log('IS SUFFICIENT', isSufficient);
+
+      if (!isSufficient) {
+        throw new BadRequestException('Insufficient funds');
+      }
+
       // step 2: update balance of sender and receiver
       const [receiverBalance, senderBalance] = await Promise.all([
         this.walletService.updateWalletBalance(recipientEmail, amount, manager),

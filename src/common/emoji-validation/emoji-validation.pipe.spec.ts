@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { EmojiValidationPipe } from './emoji-validation.pipe';
-import { LoggerService } from 'src/logger.service';
+import { LoggerService } from '../../logger.service';
 
 const emojiValidationPipe = (value: string | number | null | undefined) =>
   new EmojiValidationPipe(new LoggerService()).transform(value);
