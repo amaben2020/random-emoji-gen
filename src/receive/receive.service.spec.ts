@@ -111,42 +111,6 @@ describe('ReceiveService', () => {
     );
   });
 
-  it.skip('should deduct money from sender and add to recipient', async () => {
-    const dto = {
-      amount: 1000,
-      senderEmail: 'sender@gmail.com',
-      recipientEmail: 'receiver@gmail.com',
-    };
-
-    mockWalletService.validateUserWallet = jest
-      .fn()
-      .mockResolvedValue(undefined);
-    mockWalletService.updateWalletBalance = jest
-      .fn()
-      .mockResolvedValueOnce({ id: 1 }) // receiver
-      .mockResolvedValueOnce({ id: 2 }); // sender
-
-    await service.receiveMoney(dto);
-
-    expect(mockWalletService.validateUserWallet).toHaveBeenCalledWith(
-      'sender@gmail.com',
-      1000,
-      expect.anything(), // the manager
-    );
-
-    expect(mockWalletService.updateWalletBalance).toHaveBeenCalledWith(
-      'receiver@gmail.com',
-      1000,
-      expect.anything(),
-    );
-
-    expect(mockWalletService.updateWalletBalance).toHaveBeenCalledWith(
-      'sender@gmail.com',
-      -1000,
-      expect.anything(),
-    );
-  });
-
   it('should validate sender has enough money', async () => {
     const dto = {
       amount: 500,

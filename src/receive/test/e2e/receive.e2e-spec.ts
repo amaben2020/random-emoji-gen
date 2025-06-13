@@ -1,71 +1,3 @@
-// import * as request from 'supertest';
-// import { INestApplication } from '@nestjs/common';
-// import { Test } from '@nestjs/testing';
-// import { AppModule } from '../../../app.module';
-// import { AuthGuard } from '../../../common/auth/auth.guard';
-
-// // this is basically testing the controller logic over http
-// // run your tests in a test environment i.e create a separate database for testing purposes inside app modules, drop all tables after test is done
-
-// describe('POST /receive (e2e)', () => {
-//   let app: INestApplication; // the interface of the Nest app
-
-//   // In your test setup
-//   jest.spyOn(AuthGuard.prototype, 'canActivate').mockImplementation(() => true);
-
-//   // before every single test case, we need to initialize our nest app
-//   beforeAll(async () => {
-//     const moduleRef = await Test.createTestingModule({
-//       imports: [AppModule],
-//     }).compile();
-
-//     app = moduleRef.createNestApplication();
-//     app.setGlobalPrefix('');
-//     await app.init();
-//   });
-
-//   afterAll(async () => {
-//     await app.close();
-//   });
-
-//   it('transfers funds successfully between users', async () => {
-//     const res = await request(app.getHttpServer())
-//       .post('/receive')
-//       .set(
-//         'Authorization',
-//         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjUsImVtYWlsIjoiYW1hYmVuQGdtYWlsMi5jb20iLCJ1c2VyTmFtZSI6IkJlbjIgVXpvcjIiLCJpYXQiOjE3NDk4MTE0NDUsImV4cCI6MTc0OTgxNTA0NSwiYXVkIjoiYXVkaWVuY2UiLCJpc3MiOiJpc3N1ZXIifQ.BOafikZHTNDfysZH3M_zYfmGTqDzLwd7OyK8scX_8Bo',
-//       )
-//       .send({
-//         amount: 1,
-//         senderEmail: 'bojack@horseman.com',
-//         recipientEmail: 'amaben@gmail2.com',
-//       });
-
-//     expect(res.status).toBe(201);
-//     expect(res.body).toEqual({
-//       data: {
-//         success: true,
-//       },
-//     });
-//   }, 20000);
-
-//   it('fails if balance is insufficient', async () => {
-//     const res = await request(app.getHttpServer())
-//       .post('/receive')
-//       .set(
-//         'Authorization',
-//         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjUsImVtYWlsIjoiYW1hYmVuQGdtYWlsMi5jb20iLCJ1c2VyTmFtZSI6IkJlbjIgVXpvcjIiLCJpYXQiOjE3NDk4MTE0NDUsImV4cCI6MTc0OTgxNTA0NSwiYXVkIjoiYXVkaWVuY2UiLCJpc3MiOiJpc3N1ZXIifQ.BOafikZHTNDfysZH3M_zYfmGTqDzLwd7OyK8scX_8Bo',
-//       )
-//       .send({
-//         amount: 9999,
-//         senderEmail: 'bojack@horseman.com',
-//         recipientEmail: 'amaben@gmail2.com',
-//       });
-
-//     expect(res.status).toBe(400);
-//     // expect(res.body.message).toContain('Insufficient funds');
-//   }, 20000);
-// });
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ExecutionContext } from '@nestjs/common';
 import * as request from 'supertest';
@@ -176,6 +108,7 @@ describe('POST /receive (e2e)', () => {
     console.log(res.body);
 
     expect(res.status).toBe(400);
-    expect(res?.body?.message as string).toContain('Insufficient');
+
+    expect(res?.body?.message as any).toContain('Insufficient');
   });
 });
