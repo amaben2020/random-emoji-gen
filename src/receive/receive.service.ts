@@ -23,13 +23,11 @@ export class ReceiveService {
     try {
       // step 1: check balance of sender and receiver
 
-      // await this.walletService.validateUserWallet(senderEmail, amount, manager);
       const isSufficient = await this.walletService.validateUserWallet(
         senderEmail,
         amount,
         manager,
       );
-      console.log('IS SUFFICIENT', isSufficient);
 
       if (!isSufficient) {
         throw new BadRequestException('Insufficient funds');

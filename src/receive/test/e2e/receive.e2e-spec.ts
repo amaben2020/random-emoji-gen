@@ -100,7 +100,7 @@ describe('POST /receive (e2e)', () => {
 
   it('fails if balance is insufficient', async () => {
     const res = await request(app.getHttpServer()).post('/receive').send({
-      amount: 10000000,
+      amount: 9001,
       senderEmail: senderEmail,
       recipientEmail: recipientEmail,
     });

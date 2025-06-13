@@ -14,7 +14,9 @@ export class TransactionsService {
     @InjectRepository(Wallet)
     private readonly walletRepository: Repository<Wallet>,
   ) {}
-  public async createTransaction(data: createTransactionDto): Promise<any> {
+  public async createTransaction(
+    data: createTransactionDto,
+  ): Promise<Transaction> {
     try {
       // you must always fetch the entity first before saving it to avoid race conditions.
       const wallet = await this.walletRepository.findOne({
@@ -32,7 +34,7 @@ export class TransactionsService {
       });
       return await this.transactionRepository.save(transaction);
     } catch (error) {
-      console.log('ERROR ===>', error);
+      console.error('ERROR ===>', error);
       throw new BadRequestException('Could not create transaction');
     }
   }

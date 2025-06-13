@@ -64,6 +64,7 @@ describe('ReceiveService', () => {
     // calling the actual service
     await service.receiveMoney(dto);
 
+    // order of calls should match these expectations
     expect(mockUnitOfWorkService.startTransaction).toHaveBeenCalled();
     expect(mockWalletService.validateUserWallet).toHaveBeenCalledWith(
       dto.senderEmail,
@@ -76,19 +77,43 @@ describe('ReceiveService', () => {
     expect(mockUnitOfWorkService.release).toHaveBeenCalled();
   });
 
+  it('should throw error if sender has insufficient balance', async () => {
+    const dto = {
+      amount: 5000,
+      senderEmail: 'broke@user.com',
+      recipientEmail: 'rich@user.com',
+    };
+
+    mockWalletService.validateUserWallet = jest.fn().mockResolvedValue(false);
+
+    await expect(service.receiveMoney(dto)).rejects.toThrow(
+      'Insufficient funds',
+    );
+
+    expect(mockWalletService.validateUserWallet).toHaveBeenCalledWith(
+      'broke@user.com',
+      5000,
+      expect.anything(),
+    );
+
+    // ensure other methods were NOT called
+    expect(mockWalletService.updateWalletBalance).not.toHaveBeenCalled();
+    expect(mockTransactionsService.createTransaction).not.toHaveBeenCalled();
+    expect(mockUnitOfWorkService.commitTransaction).not.toHaveBeenCalled();
+  });
+
   it('should deduct money from sender and add to recipient', async () => {
     const dto = {
       amount: 1000,
       senderEmail: 'sender@gmail.com',
       recipientEmail: 'receiver@gmail.com',
     };
-
-    mockWalletService.validateUserWallet = jest.fn().mockResolvedValue(true); // ✅ fix here
-
-    mockWalletService.updateWalletBalance = jest
-      .fn()
-      .mockResolvedValueOnce({ id: 1 }) // receiver
-      .mockResolvedValueOnce({ id: 2 }); // sender
+    // "Create a mock function that, when called asynchronously, resolves to true."
+    mockWalletService.validateUserWallet = jest.fn().mockResolvedValue(true);
+    // equivalent to this
+    // async function validateUserWallet(...) {
+    //   return true;
+    // }
 
     await service.receiveMoney(dto);
 
@@ -136,14 +161,11 @@ describe('ReceiveService', () => {
 
     await service.receiveMoney(dto);
 
-    expect(mockTransactionsService.createTransaction).toHaveBeenCalledWith(
-      {
-        amount: 1000,
-        walletId: 'wallet-id',
-        title: 'alice@email.com successfully transferred to bob@email.com',
-      },
-      // expect.anything(), // the transaction manager
-    );
+    expect(mockTransactionsService.createTransaction).toHaveBeenCalledWith({
+      amount: 1000,
+      walletId: 'wallet-id',
+      title: 'alice@email.com successfully transferred to bob@email.com',
+    });
   });
   it('should rollback if something goes wrong', async () => {
     const dto = {
@@ -164,30 +186,3 @@ describe('ReceiveService', () => {
     expect(mockUnitOfWorkService.rollbackTransaction).toHaveBeenCalled();
   });
 });
-
-// function forEach<T>(items: T[], callback: (item: T) => any): void {
-//   for (const item of items) {
-//     callback(item);
-//   }
-// }
-
-// const mockCallback = jest.fn((x: number): number => 42 + x);
-
-// test('forEach mock function', () => {
-//   forEach([0, 1], mockCallback);
-
-//   console.log('mockCallback.mock.calls', mockCallback.mock.calls);
-//   console.log('mockCallback.mock.results', mockCallback.mock.results);
-
-//   // The mock function was called twice
-//   expect(mockCallback.mock.calls).toHaveLength(2);
-
-//   // The first argument of the first call to the function was 0
-//   expect(mockCallback.mock.calls[0][0]).toBe(0);
-
-//   // The first argument of the second call to the function was 1
-//   expect(mockCallback.mock.calls[1][0]).toBe(1);
-
-//   // The return value of the first call to the function was 42
-//   expect(mockCallback.mock.results[0].value).toBe(42);
-// });
