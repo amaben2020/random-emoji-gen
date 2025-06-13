@@ -9,6 +9,7 @@ import { Wallet } from '../wallet/wallet.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Transaction } from './transactions.entity';
 import { TransactionsController } from './transactions.controller';
+import { createMockRepository } from 'test/__mocks__/mockRepository';
 
 describe('TransactionsService', () => {
   let service: TransactionsService;
@@ -16,15 +17,36 @@ describe('TransactionsService', () => {
   let mockWalletRepository: jest.Mocked<Repository<Wallet>>;
   let mockTransactionRepository: jest.Mocked<Repository<Transaction>>;
 
-  beforeEach(async () => {
-    mockWalletRepository = {
-      findOne: jest.fn(),
-    } as any;
+  const data = {
+    title: 'test',
+    walletId: 100,
+    amount: 10000,
+  };
 
-    mockTransactionRepository = {
-      create: jest.fn(),
-      save: jest.fn(),
-    } as any;
+  const mockWallet = { id: 1 } as Wallet;
+  const mockTransaction = {
+    id: 1,
+    ...data,
+    wallet: mockWallet,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  } as Transaction;
+
+  beforeEach(async () => {
+    // before we were just using one method
+    // mockWalletRepository = {
+    //   findOne: jest.fn(),
+    // } as any;
+
+    mockWalletRepository =
+      createMockRepository<Wallet>() as unknown as jest.Mocked<
+        Repository<Wallet>
+      >;
+
+    mockTransactionRepository =
+      createMockRepository<Transaction>() as unknown as jest.Mocked<
+        Repository<Transaction>
+      >;
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TransactionsController],
@@ -49,21 +71,6 @@ describe('TransactionsService', () => {
   });
 
   it('should create a transaction with valid data', async () => {
-    const data = {
-      title: 'test',
-      walletId: 100,
-      amount: 10000,
-    };
-
-    const mockWallet = { id: 1 } as Wallet;
-    const mockTransaction = {
-      id: 1,
-      ...data,
-      wallet: mockWallet,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    } as Transaction;
-
     mockWalletRepository.findOne.mockResolvedValue(mockWallet);
     mockTransactionRepository.create.mockReturnValue(mockTransaction);
     mockTransactionRepository.save.mockResolvedValue(mockTransaction);
@@ -80,5 +87,17 @@ describe('TransactionsService', () => {
         wallet: mockWallet,
       }),
     );
+  });
+
+  it('should get transaction by wallet id', async () => {
+    mockTransactionRepository.find.mockResolvedValue([mockTransaction]);
+
+    const result = await service.getTransactionsByWalletId(mockWallet.id);
+
+    expect(result).toEqual([mockTransaction]);
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    expect(mockTransactionRepository.find).toHaveBeenCalledWith({
+      where: { wallet: { id: mockWallet.id } },
+    });
   });
 });
