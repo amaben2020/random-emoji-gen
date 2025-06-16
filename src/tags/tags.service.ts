@@ -47,7 +47,13 @@ export class TagsService {
   }
 
   async create(createTagDto: CreateTagDto) {
-    const newTag = this.tagRepository.create(createTagDto);
-    return await this.tagRepository.save(newTag);
+    try {
+      const newTag = this.tagRepository.create(createTagDto);
+      const savedTag = await this.tagRepository.save(newTag);
+
+      return savedTag;
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 }

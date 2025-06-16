@@ -80,4 +80,36 @@ describe('TagsService', () => {
       },
     });
   });
+
+  it('should create new tags', async () => {
+    const createDto = {
+      title: 'Test Title',
+      slug: 'test-slug',
+      description: 'Test Description',
+    };
+
+    const createdEntity = {
+      ...createDto,
+      id: '1',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      posts: [],
+    };
+
+    mockTagRepository.create.mockReturnValue(createdEntity);
+    mockTagRepository.save.mockResolvedValue(createdEntity);
+
+    mockTagRepository.find.mockResolvedValue(tags);
+
+    mockTagRepository.create.mockReturnValue(createdEntity);
+    mockTagRepository.save.mockResolvedValue(createdEntity);
+
+    const result = await service.create(createDto);
+
+    expect(mockTagRepository.create).toHaveBeenCalledWith(createDto);
+    expect(mockTagRepository.save).toHaveBeenCalledWith(createdEntity);
+    expect(result).toMatchObject(createdEntity);
+    // If your test still fails due to Date objects or deep reference issues, use .toMatchObject() instead of .toEqual() or write a partial matcher
+    expect(result).toEqual(createdEntity);
+  });
 });
