@@ -11,7 +11,7 @@ export class TagsService {
     private readonly tagRepository: Repository<Tag>,
   ) {}
 
-  async getTags(): Promise<Tag[] | undefined> {
+  async getTags(): Promise<Tag[]> {
     try {
       return await this.tagRepository.find();
     } catch (error) {
