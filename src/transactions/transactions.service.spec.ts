@@ -70,13 +70,16 @@ describe('TransactionsService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should create a transaction with valid data', async () => {
+  it('should persist a new transaction when given valid wallet and data', async () => {
+    // Arrange: these should happen before the service call
     mockWalletRepository.findOne.mockResolvedValue(mockWallet);
     mockTransactionRepository.create.mockReturnValue(mockTransaction);
     mockTransactionRepository.save.mockResolvedValue(mockTransaction);
 
+    // Act: after db values are set up, make the actual service call
     const result = await service.createTransaction(data);
 
+    // Assert
     expect(result.title).toBe('test');
     expect(result.amount).toBe(10000);
     // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -90,14 +93,33 @@ describe('TransactionsService', () => {
   });
 
   it('should get transaction by wallet id', async () => {
+    // setup db with mock data
     mockTransactionRepository.find.mockResolvedValue([mockTransaction]);
 
-    const result = await service.getTransactionsByWalletId(mockWallet.id);
+    // when this service is called, it basically goes to the mock repository and returns the mock data
+    const result = await service.getTransactionsByWalletId(
+      mockTransaction.wallet.id,
+    );
 
     expect(result).toEqual([mockTransaction]);
     // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(mockTransactionRepository.find).toHaveBeenCalledWith({
       where: { wallet: { id: mockWallet.id } },
+    });
+  });
+
+  it('should return correct transaction by transaction id', async () => {
+    // setup db with mock data
+    mockTransactionRepository.find.mockResolvedValue([mockTransaction]);
+
+    // when this service is called, it basically goes to the mock repository and returns the mock data
+    const result = await service.getTransactionById(mockTransaction.id);
+
+    expect(result[0]).toEqual(mockTransaction);
+    expect(result.length).toBe(1);
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    expect(mockTransactionRepository.find).toHaveBeenCalledWith({
+      where: { id: mockTransaction.id },
     });
   });
 });

@@ -1,4 +1,3 @@
-// test/__mocks__/mockRepository.ts
 import { Repository } from 'typeorm';
 
 export const createMockRepository = <T extends object>(): jest.Mocked<

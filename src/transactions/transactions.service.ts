@@ -55,4 +55,19 @@ export class TransactionsService {
       throw new BadRequestException('Could not find transactions');
     }
   }
+
+  public async getTransactionById(
+    transactionId: number,
+  ): Promise<Transaction[]> {
+    try {
+      return await this.transactionRepository.find({
+        where: {
+          id: transactionId,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException('Could not find transactions');
+    }
+  }
 }
