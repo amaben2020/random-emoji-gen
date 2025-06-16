@@ -99,11 +99,6 @@ describe('TagsService', () => {
     mockTagRepository.create.mockReturnValue(createdEntity);
     mockTagRepository.save.mockResolvedValue(createdEntity);
 
-    mockTagRepository.find.mockResolvedValue(tags);
-
-    mockTagRepository.create.mockReturnValue(createdEntity);
-    mockTagRepository.save.mockResolvedValue(createdEntity);
-
     const result = await service.create(createDto);
 
     expect(mockTagRepository.create).toHaveBeenCalledWith(createDto);
